@@ -5,9 +5,7 @@ import react from '@vitejs/plugin-react'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [ tailwindcss(), react()],
-  build: {
-    rollupOptions: {
-      external: ['react-big-calendar'], // Mark react-big-calendar as external
-    },
+  optimizeDeps: {
+    include: ['react-big-calendar', 'moment'], // Pre-bundle these dependencies for faster builds
   },
 })
