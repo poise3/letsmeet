@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { UserAuth } from "../context/AuthContext";
+import MonthCalendar from "./MonthCalendar";
 
 const Dashboard = () => {
   const { session, signOut } = UserAuth();
@@ -20,6 +21,7 @@ const Dashboard = () => {
   return (
     <div>
       <h1>Dashboard</h1>
+      <MonthCalendar />
       <h2>Welcome, {session?.user?.email}</h2>
       <div>
         <p
