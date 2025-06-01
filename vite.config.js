@@ -8,4 +8,9 @@ export default defineConfig({
   optimizeDeps: {
     include: ['react-big-calendar', 'moment'], // Pre-bundle these dependencies for faster builds
   },
+  build: {
+    rollupOptions: {
+      external: [], // Ensure we're not externalizing anything unnecessary
+    },
+  },
 })
