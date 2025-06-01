@@ -13,4 +13,5 @@ export default defineConfig({
       external: [], // Ensure we're not externalizing anything unnecessary
     },
   },
+  
 })
