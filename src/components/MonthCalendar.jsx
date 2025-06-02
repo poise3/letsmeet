@@ -9,8 +9,8 @@ const localizer = momentLocalizer(moment);
 
 function MonthCalendar() {
   const [eventsData, setEventsData] = useState(events);
-  const [currentView, setCurrentView] = useState("month"); 
-  const [currentDate, setCurrentDate] = useState(new Date()); 
+  const [currentView, setCurrentView] = useState("month");
+  const [currentDate, setCurrentDate] = useState(new Date());
 
   const handleViewChange = (newView) => {
     setCurrentView(newView); // Update the current view state
@@ -48,9 +48,9 @@ function MonthCalendar() {
   };
 
   useEffect(() => {
-    console.log("Calendar View or Events Updated!" + {currentView});
+    console.log("Calendar View or Events Updated!" + { currentView });
   }, [currentView, eventsData]);
-  
+
   return (
     <div className="App">
       <Calendar
@@ -60,7 +60,7 @@ function MonthCalendar() {
         date={currentDate}
         view={currentView}
         events={eventsData}
-        style={{ height: "100vh" }}
+        style={{ height: "85vh" }}
         onSelectEvent={handleDelete}
         onSelectSlot={handleSelect}
         onView={handleViewChange}

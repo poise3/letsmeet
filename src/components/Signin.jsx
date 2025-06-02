@@ -35,12 +35,12 @@ const Signin = () => {
 
   return (
     <div>
-      <form onSubmit={handleSignIn} className="max-w-md m-auto pt-24">
-        <h2 className="font-bold pb-2">Sign in</h2>
-        <p>
+      <h1 className=" text-center text-3xl pt-40 fancy-font">LetsMeet</h1>
+      <form onSubmit={handleSignIn} className="max-w-md m-auto pt-20">
+        <p className="font-bold pb-2 text-center">
           Don't have an account yet? <Link to="/signup">Sign up</Link>
         </p>
-        <div className="flex flex-col py-4">
+        <div className="flex flex-col py-4 ">
           {/* <label htmlFor="Email">Email</label> */}
           <input
             onChange={(e) => setEmail(e.target.value)}

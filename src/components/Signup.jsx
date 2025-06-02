@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { UserAuth } from "../context/AuthContext";
 
 const Signup = () => {
+  const [displayName, setDisplayName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
@@ -16,7 +17,7 @@ const Signup = () => {
     setLoading(true);
 
     try {
-      const result = await signUpNewUser(email, password); // Call context function
+      const result = await signUpNewUser(displayName, email, password); // Call context function
 
       if (result.success) {
         navigate("/dashboard"); // Navigate to dashboard on success
@@ -32,11 +33,24 @@ const Signup = () => {
 
   return (
     <div>
-      <form onSubmit={handleSignUp} className="max-w-md m-auto pt-24">
-        <h2 className="font-bold pb-2">Sign up today!</h2>
-        <p>
+      <h1 className=" text-center text-3xl pt-40 fancy-font">LetsMeet</h1>
+      <form onSubmit={handleSignUp} className="max-w-md m-auto pt-20">
+        <p className="font-bold pb-2 text-center">
           Already have an account? <Link to="/">Sign in</Link>
         </p>
+
+        <div className="flex flex-col py-4">
+          {/* <label htmlFor="Name">Name</label> */}
+          <input
+            onChange={(e) => setDisplayName(e.target.value)}
+            className="p-3 mt-2"
+            type="text"
+            name="displayName"
+            id="displayName"
+            placeholder="Display Name"
+          />
+        </div>
+
         <div className="flex flex-col py-4">
           {/* <label htmlFor="Email">Email</label> */}
           <input

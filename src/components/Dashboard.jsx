@@ -20,16 +20,25 @@ const Dashboard = () => {
   console.log(session);
   return (
     <div>
-      <h1>Dashboard</h1>
-      <MonthCalendar />
-      <h2>Welcome, {session?.user?.email}</h2>
-      <div>
-        <p
-          onClick={handleSignOut}
-          className="hover:cursor-pointer  border inline-block px-4 py-3 mt-4 "
-        >
-          Sign out
-        </p>
+      <div className="flex gap-10 ">
+        <div className="w-3/4 pt-8 px-20">
+          <div className="bg-emerald-50 rounded-2xl p-10">
+            <MonthCalendar />
+          </div>
+        </div>
+
+        <div>
+          <h1 className="text-3xl font-bold mb-4 fancy-font pt-20">LetsMeet</h1>
+          <h2>Welcome, {session?.user?.user_metadata.display_name}</h2>
+          <div>
+            <p
+              onClick={handleSignOut}
+              className="hover:cursor-pointer  border inline-block px-4 py-3 mt-4 "
+            >
+              Sign out
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
