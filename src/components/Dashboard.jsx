@@ -22,14 +22,17 @@ const Dashboard = () => {
     <div>
       <div className="flex gap-10 ">
         <div className="w-3/4 pt-8 px-20">
-          <div className="bg-emerald-50 rounded-2xl p-10">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-10 shadow-lg">
             <MonthCalendar />
           </div>
         </div>
 
         <div>
           <h1 className="text-3xl font-bold mb-4 fancy-font pt-20">LetsMeet</h1>
-          <h2>Welcome, {session?.user?.user_metadata.display_name}</h2>
+          <h2>
+            Welcome,{" "}
+            {session?.user?.user_metadata.display_name || session?.user?.email}
+          </h2>
           <div>
             <p
               onClick={handleSignOut}
