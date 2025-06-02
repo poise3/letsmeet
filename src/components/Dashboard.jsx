@@ -22,7 +22,7 @@ const Dashboard = () => {
     <div>
       <div className="flex gap-10 ">
         <div className="w-3/4 pt-8 px-20">
-          <div className=" rounded-2xl p-10 shadow-lg">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-10 shadow-lg">
             <MonthCalendar />
           </div>
         </div>
