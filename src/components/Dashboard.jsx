@@ -10,6 +10,7 @@ const Dashboard = () => {
   const handleSignOut = async (e) => {
     e.preventDefault();
  
+    
     try {
       await signOut();
       navigate("/");
