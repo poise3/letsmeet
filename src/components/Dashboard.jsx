@@ -9,11 +9,10 @@ const Dashboard = () => {
 
   const handleSignOut = async (e) => {
     e.preventDefault();
- 
-    
+
     try {
       await signOut();
-      navigate("/");
+      navigate("/signin");
     } catch (err) {
       setError("An unexpected error occurred."); // Catch unexpected errors
     }

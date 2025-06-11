@@ -3,14 +3,32 @@ import { Calendar, momentLocalizer } from "react-big-calendar";
 import moment from "moment";
 import events from "./events";
 import "react-big-calendar/lib/css/react-big-calendar.css";
+import { supabase } from "../supabaseClient";
+import { UserAuth } from "../context/AuthContext";
 
 moment.locale("en-GB");
 const localizer = momentLocalizer(moment);
 
 function MonthCalendar() {
-  const [eventsData, setEventsData] = useState(events);
+  const { session } = UserAuth(); // get current user
+  const [eventsData, setEventsData] = useState([]);
   const [currentView, setCurrentView] = useState("month");
   const [currentDate, setCurrentDate] = useState(new Date());
+
+  const fetchEvents = async () => {
+    if (!session?.user?.id) return;
+
+    const { data, error } = await supabase
+      .from("calendar")
+      .select("*")
+      .eq("user_id", session.user.id);
+
+    if (error) {
+      console.error("Error loading events:", error);
+    } else {
+      setEventsData(data);
+    }
+  };
 
   const handleViewChange = (newView) => {
     setCurrentView(newView); // Update the current view state
@@ -21,35 +39,49 @@ function MonthCalendar() {
     setCurrentDate(newDate); // Update the current view state
   };
 
-  const handleDelete = (event) => {
+  const handleDelete = async (event) => {
     const index = eventsData.findIndex((e) => e.id === event.id);
     const removal = confirm("Are you sure you want to delete this event?");
-    if (removal)
-      if (index !== -1) {
-        setEventsData((prevEventsData) =>
-          prevEventsData.filter((e, i) => i !== index)
-        );
-      }
+    if (!removal) return;
+
+    const { error } = await supabase
+      .from("calendar")
+      .delete()
+      .eq("id", event.id)
+      .eq("user_id", session.user.id); // safety
+
+    if (error) {
+      console.error("Error deleting event:", error);
+    } else {
+      fetchEvents();
+    }
   };
 
-  const handleSelect = ({ start, end }) => {
+  const handleSelect = async ({ start, end }) => {
     console.log(start);
     console.log(end);
     const title = window.prompt("New Event name");
-    if (title)
-      setEventsData([
-        ...eventsData,
-        {
-          start,
-          end,
-          title,
-        },
-      ]);
+    if (!title || !session?.user?.id) return;
+
+    const { data, error } = await supabase.from("calendar").insert([
+      {
+        title,
+        start,
+        end,
+        user_id: session.user.id,
+      },
+    ]);
+
+    if (error) {
+      console.error("Error saving event:", error);
+    } else {
+      fetchEvents();
+    }
   };
 
   useEffect(() => {
-    console.log("Calendar View or Events Updated!" + { currentView });
-  }, [currentView, eventsData]);
+    fetchEvents();
+  }, [session]);
 
   return (
     <div className="App">
