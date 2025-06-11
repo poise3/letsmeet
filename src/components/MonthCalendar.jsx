@@ -26,7 +26,12 @@ function MonthCalendar() {
     if (error) {
       console.error("Error loading events:", error);
     } else {
-      setEventsData(data);
+      const parsedEvents = data.map((event) => ({
+        ...event,
+        start: new Date(event.start),
+        end: new Date(event.end),
+      }));
+      setEventsData(parsedEvents);
     }
   };
 
