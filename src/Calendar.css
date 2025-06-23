@@ -1,0 +1,64 @@
+.react-datetime-picker__inputGroup__input {
+  width: 50px !important; /* Set width for all input fields (day, month, year, hour, minute) */
+  font-size: 16px !important;  /* Increase font size */
+  padding: 5px !important;     /* Padding inside inputs for better visual */
+}
+
+.react-datetime-picker__inputGroup__day,
+.react-datetime-picker__inputGroup__month,
+.react-datetime-picker__inputGroup__year,
+.react-datetime-picker__inputGroup__hour,
+.react-datetime-picker__inputGroup__minute {
+  width: 60px !important; /* Make sure these inputs have reasonable width */
+}
+
+.react-datetime-picker__inputGroup__divider {
+  margin: 0 5px !important; /* Add space between inputs for better separation */
+}
+
+.react-datetime-picker__inputGroup {
+  display: flex;
+  align-items: center;
+}
+
+/* Optional: Adjust height of the input fields */
+.react-datetime-picker__inputGroup__input {
+  height: 40px !important;  /* Increase height for better usability */
+}
+
+.react-calendar__month-view__days__day--neighboringMonth {
+  position: relative !important;
+  z-index: 1; /* Ensure it's not hidden behind other elements */
+}
+
+.react-calendar__tile {
+  position: relative !important;
+  z-index: 10;
+}
+
+/* This CSS helps prevent the calendar pop-up from being pushed above */
+.react-calendar__month-view__days__day:hover {
+  z-index: 100; /* Increase z-index on hover */
+}
+
+/* Optional: Adjust the calendar wrapper's position to fix overflow issues */
+.react-calendar {
+  position: relative;
+  z-index: 10;
+  overflow: visible;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 300px;
+  z-index: 999;
+}
+/* Calendar styling */
+.react-datetime-picker__calendar {
+  position: relative; /* Ensures the calendar is within the modal */
+  background-color: white; /* Solid white background for calendar */
+  border-radius: 10px; /* Optional: adds rounded corners to the calendar */
+  z-index: 1000; /* Ensures it's above other modal content */
+}

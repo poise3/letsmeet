@@ -40,3 +40,8 @@
 .read-the-docs {
   color: #888;
 }
+
+.datetime-picker input {
+  width: 300px; /* Increase input size */
+  height: 40px; /* Adjust height */
+}
