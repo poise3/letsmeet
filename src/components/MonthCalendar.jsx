@@ -17,8 +17,6 @@
     const [currentView, setCurrentView] = useState("month");
     const [currentDate, setCurrentDate] = useState(new Date());
 
-
-    const [showModal, setShowModal] = useState(true);
     const [eventToEdit, setEventToEdit] = useState(null);
     const [newStartDate, setNewStartDate] = useState(new Date());
     const [newEndDate, setNewEndDate] = useState(new Date());
@@ -135,7 +133,6 @@
       setEventToEdit(event);
       setNewStartDate(event.start);
       setNewEndDate(event.end);
-      setShowModal(true);
     };
 
     const handleDateSelect = (selectedDate, isStartDate) => {
@@ -166,7 +163,7 @@
           onNavigate={handleDateChange}
         />
 
-        {showModal && (
+
           <div className="modal">
             <div className="modal-content">
               <h3>{eventToEdit ? "Edit Event" : "Create New Event"}</h3>
@@ -211,7 +208,6 @@
               <button onClick={() => setEventToEdit(null)}>Cancel</button>
             </div>
           </div>
-        )}
 
       </div>
     );
