@@ -21,6 +21,8 @@ function MonthCalendar() {
   const [sharedWithInput, setSharedWithInput] = useState("");
   const [newStartDate, setNewStartDate] = useState(new Date());
   const [newEndDate, setNewEndDate] = useState(new Date());
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
 
   const fetchEvents = async () => {
     if (!session?.user?.id) return;
@@ -70,6 +72,7 @@ function MonthCalendar() {
       fetchEvents();
       setEventToEdit(null);
     }
+    setIsModalOpen(false);
   };
 
   const handleEdit = async () => {
@@ -82,6 +85,16 @@ function MonthCalendar() {
       .filter(Boolean);
 
     const sharedWithUserIds = await getUserIdsFromEmails(emails);
+
+
+    if (
+      !newStartDate ||
+      !newEndDate ||
+      newStartDate >= newEndDate
+    ) {
+      alert("Please select valid start and end dates!");
+      return;
+    }
 
     // Update (not delete + insert) the event:
     const { error } = await supabase
@@ -102,6 +115,7 @@ function MonthCalendar() {
     fetchEvents();
     setEventToEdit(null);
     setSharedWithInput("");
+    setIsModalOpen(false);
   };
 
   const handleSelect = async ({ start, end }) => {
@@ -124,6 +138,7 @@ function MonthCalendar() {
     } else {
       fetchEvents();
     }
+    setIsModalOpen(false);
   };
 
   const openModal = async (event) => {
@@ -136,6 +151,7 @@ function MonthCalendar() {
     } else {
       setSharedWithInput("");
     }
+    setIsModalOpen(true);
   };
 
   const handleDateSelect = (selectedDate, isStartDate) => {
@@ -199,7 +215,7 @@ function MonthCalendar() {
         onView={handleViewChange}
         onNavigate={handleDateChange}
       />
-
+      {isModalOpen && (
       <div className="modal">
         <div className="modal-content">
           <h3>{eventToEdit ? "Edit Event" : "Create New Event"}</h3>
@@ -262,9 +278,12 @@ function MonthCalendar() {
             </button>
           )}
 
-          <button onClick={() => setEventToEdit(null)}>Cancel</button>
+          <button onClick={() => {setEventToEdit(null);
+            () => setIsModalOpen(false);}
+          }>Cancel</button>
         </div>
       </div>
+      )}
     </div>
   );
 }
