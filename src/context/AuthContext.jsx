@@ -23,6 +23,37 @@ export const AuthContextProvider = ({ children }) => {
       return { success: false, error };
     }
 
+    // Step 2: Extract the user ID from the returned data
+    // (Supabase v2: data.user, sometimes just data.user if returned synchronously, or data.session.user if returned after email confirmation)
+    let userId = null;
+    if (data.user && data.user.id) {
+      userId = data.user.id;
+    } else if (data.session && data.session.user && data.session.user.id) {
+      userId = data.session.user.id;
+    }
+
+    if (!userId) {
+      // If the user ID isn't available yet (email confirmation needed), skip for now.
+      // You might want to populate the users table on their first sign-in as a fallback.
+      console.warn(
+        "User ID not available after sign-up. Will sync on first sign-in."
+      );
+      return { success: true, data };
+    }
+
+    // Step 3: Insert into the 'users' table
+    const { error: insertError } = await supabase.from("users").insert([
+      {
+        id: userId,
+        email: email.toLowerCase(),
+      },
+    ]);
+
+    if (insertError) {
+      // Not critical, but log it
+      console.error("Error adding user to public users table:", insertError);
+    }
+
     return { success: true, data };
   };
 
