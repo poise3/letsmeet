@@ -123,7 +123,7 @@ function MonthCalendar() {
     console.log(end);
     const title = window.prompt("New Event name");
     if (!title || !session?.user?.id) return;
-
+    
     const { data, error } = await supabase.from("calendar").insert([
       {
         title,
@@ -133,12 +133,18 @@ function MonthCalendar() {
       },
     ]);
 
+    console.log("Supabase Insert Response:", { data, error });
+
     if (error) {
       console.error("Error saving event:", error);
     } else {
+      console.log("Inserted Event:", data);
       fetchEvents();
+      if (data && data[0]) {
+        setEventToEdit(data[0]); // Open the modal for the new event
+        setIsModalOpen(true);
+      }
     }
-    setIsModalOpen(false);
   };
 
   const openModal = async (event) => {
@@ -196,6 +202,12 @@ function MonthCalendar() {
     );
   };
 
+  const openModalForCreate = () => {
+    setNewStartDate(new Date()); // Reset to current date for new event
+    setNewEndDate(new Date()); // Reset to current date for new event
+    setIsModalOpen(true); // Open the modal for event creation
+  };
+
   useEffect(() => {
     fetchEvents();
   }, [session]);
@@ -215,6 +227,26 @@ function MonthCalendar() {
         onView={handleViewChange}
         onNavigate={handleDateChange}
       />
+
+      {/* Button to create new event */}
+      <button
+        className="create-event-btn"
+        onClick={openModalForCreate}
+        style={{
+        position: "fixed",
+        bottom: "30px",  // distance from the bottom of the window
+        right: "30px",   // distance from the right of the window
+        padding: "10px 20px",
+        backgroundColor: "#007bff",
+        color: "#fff",
+        border: "none",
+        borderRadius: "5px",
+        cursor: "pointer",
+        zIndex: 1000,  // Ensure it's above other elements on the page
+      }}
+      >
+        Create New Event
+      </button>
       {isModalOpen && (
       <div className="modal">
         <div className="modal-content">
@@ -272,14 +304,16 @@ function MonthCalendar() {
                 }
                 // Make sure the start and end dates are set
                 handleSelect({ start: newStartDate, end: newEndDate }); // Pass the correct start and end dates
+                setIsModalOpen(false);
               }}
+              
             >
               Create Event
             </button>
           )}
 
           <button onClick={() => {setEventToEdit(null);
-            () => setIsModalOpen(false);}
+            setIsModalOpen(false);}
           }>Cancel</button>
         </div>
       </div>
