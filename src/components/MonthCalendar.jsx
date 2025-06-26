@@ -19,10 +19,10 @@ function MonthCalendar() {
 
   const [eventToEdit, setEventToEdit] = useState(null);
   const [sharedWithInput, setSharedWithInput] = useState("");
+  const [eventTitle, setEventTitle] = useState("");
   const [newStartDate, setNewStartDate] = useState(new Date());
   const [newEndDate, setNewEndDate] = useState(new Date());
   const [isModalOpen, setIsModalOpen] = useState(false);
-
 
   const fetchEvents = async () => {
     if (!session?.user?.id) return;
@@ -63,8 +63,8 @@ function MonthCalendar() {
     const { error } = await supabase
       .from("calendar")
       .delete()
-      .eq("id", event.id)
-      .eq("user_id", session.user.id); // safety
+      .eq("id", event.id);
+    //.eq("user_id", session.user.id); *this line gives event owner permissions to delete only*
 
     if (error) {
       console.error("Error deleting event:", error);
@@ -86,12 +86,12 @@ function MonthCalendar() {
 
     const sharedWithUserIds = await getUserIdsFromEmails(emails);
 
+    if (!eventTitle) {
+      alert("Please enter event title!");
+      return;
+    }
 
-    if (
-      !newStartDate ||
-      !newEndDate ||
-      newStartDate >= newEndDate
-    ) {
+    if (!newStartDate || !newEndDate || newStartDate >= newEndDate) {
       alert("Please select valid start and end dates!");
       return;
     }
@@ -100,12 +100,13 @@ function MonthCalendar() {
     const { error } = await supabase
       .from("calendar")
       .update({
+        title: eventTitle,
         start: newStartDate,
         end: newEndDate,
         shared_with: sharedWithUserIds,
       })
-      .eq("id", eventToEdit.id)
-      .eq("user_id", session.user.id);
+      .eq("id", eventToEdit.id);
+    //.eq("user_id", session.user.id); *this line gives event owner permissions to edit only*
 
     if (error) {
       alert("Error saving changes!");
@@ -118,37 +119,60 @@ function MonthCalendar() {
     setIsModalOpen(false);
   };
 
-  const handleSelect = async ({ start, end }) => {
-    console.log(start);
-    console.log(end);
-    const title = window.prompt("New Event name");
-    if (!title || !session?.user?.id) return;
-    
+  const handleCreateEvent = async () => {
+    if (!session?.user?.id) return;
+
+    // Process emails from input
+    const emails = sharedWithInput
+      .split(",")
+      .map((e) => e.trim())
+      .filter(Boolean);
+
+    const sharedWithUserIds = await getUserIdsFromEmails(emails);
+
+    if (!eventTitle) {
+      alert("Please enter event title!");
+      return;
+    }
+
+    if (!newStartDate || !newEndDate || newStartDate >= newEndDate) {
+      alert("Please select valid start and end dates!");
+      return;
+    }
+
+    // insert the event:
     const { data, error } = await supabase.from("calendar").insert([
       {
-        title,
-        start,
-        end,
+        title: eventTitle,
+        start: newStartDate,
+        end: newEndDate,
         user_id: session.user.id,
+        shared_with: sharedWithUserIds,
       },
     ]);
 
     console.log("Supabase Insert Response:", { data, error });
 
     if (error) {
-      console.error("Error saving event:", error);
-    } else {
-      console.log("Inserted Event:", data);
-      fetchEvents();
-      if (data && data[0]) {
-        setEventToEdit(data[0]); // Open the modal for the new event
-        setIsModalOpen(true);
-      }
+      alert("Error saving changes!");
+      console.error("Error creating event:", error);
+      return;
     }
+    fetchEvents();
+    setEventToEdit(null);
+    setSharedWithInput("");
+    setIsModalOpen(false);
+  };
+
+  const handleSelect = async ({ start, end }) => {
+    openModalForCreate();
+    setNewStartDate(start);
+    setNewEndDate(end);
   };
 
   const openModal = async (event) => {
     setEventToEdit(event);
+    setEventTitle(event.title);
     setNewStartDate(event.start);
     setNewEndDate(event.end);
     if (event.shared_with) {
@@ -195,14 +219,9 @@ function MonthCalendar() {
     return data.map((user) => user.email).join(", ");
   }
 
-  const canEdit = (event) => {
-    const userId = session.user.id;
-    return (
-      event.user_id === userId || (event.shared_with || []).includes(userId)
-    );
-  };
-
   const openModalForCreate = () => {
+    setEventTitle("");
+    setSharedWithInput("");
     setNewStartDate(new Date()); // Reset to current date for new event
     setNewEndDate(new Date()); // Reset to current date for new event
     setIsModalOpen(true); // Open the modal for event creation
@@ -233,90 +252,93 @@ function MonthCalendar() {
         className="create-event-btn"
         onClick={openModalForCreate}
         style={{
-        position: "fixed",
-        bottom: "30px",  // distance from the bottom of the window
-        right: "30px",   // distance from the right of the window
-        padding: "10px 20px",
-        backgroundColor: "#007bff",
-        color: "#fff",
-        border: "none",
-        borderRadius: "5px",
-        cursor: "pointer",
-        zIndex: 1000,  // Ensure it's above other elements on the page
-      }}
+          position: "fixed",
+          bottom: "30px", // distance from the bottom of the window
+          right: "30px", // distance from the right of the window
+          padding: "10px 20px",
+          backgroundColor: "#007bff",
+          color: "#fff",
+          border: "none",
+          borderRadius: "5px",
+          cursor: "pointer",
+          zIndex: 1000, // Ensure it's above other elements on the page
+        }}
       >
         Create New Event
       </button>
       {isModalOpen && (
-      <div className="modal">
-        <div className="modal-content">
-          <h3>{eventToEdit ? "Edit Event" : "Create New Event"}</h3>
-          <label>Start Date & Time:</label>
-          <DateTimePicker
-            onChange={(date) => {
-              handleDateSelect(date, true);
-            }}
-            disableCalendar={true}
-            value={newStartDate}
-            disableClock={true}
-            clearIcon={null}
-          />
-          <br />
-          <label>End Date & Time:</label>
-          <DateTimePicker
-            onChange={(date) => {
-              handleDateSelect(date, false);
-            }}
-            disableCalendar={true}
-            value={newEndDate}
-            disableClock={false}
-            clearIcon={null}
-          />
-          <br />
+        <div className="modal">
+          <div className="modal-content">
+            <h3>{eventToEdit ? "Edit Event" : "Create New Event"}</h3>
+            <label>Title:</label>
+            <input
+              type="text"
+              value={eventTitle}
+              onChange={(e) => setEventTitle(e.target.value)}
+              placeholder="Study with Timmy"
+              className="w-full p-2 border rounded"
+            />
+            <label>Share With:</label>
+            <input
+              type="text"
+              value={sharedWithInput}
+              onChange={(e) => setSharedWithInput(e.target.value)}
+              placeholder="user1@example.com, user2@example.com"
+              className="w-full p-2 border rounded"
+            />
+            <label>Start Date & Time:</label>
+            <DateTimePicker
+              onChange={(date) => {
+                handleDateSelect(date, true);
+              }}
+              disableCalendar={true}
+              value={newStartDate}
+              disableClock={true}
+              clearIcon={null}
+            />
+            <br />
+            <label>End Date & Time:</label>
+            <DateTimePicker
+              onChange={(date) => {
+                handleDateSelect(date, false);
+              }}
+              disableCalendar={true}
+              value={newEndDate}
+              disableClock={false}
+              clearIcon={null}
+            />
+            <br />
 
-          <label>Share With (comma-separated emails):</label>
-          <input
-            type="text"
-            value={sharedWithInput}
-            onChange={(e) => setSharedWithInput(e.target.value)}
-            placeholder="user1@example.com, user2@example.com"
-            className="w-full p-2 border rounded"
-          />
-
-          {/* Show "Save Changes" and "Delete Event" only when editing an existing event */}
-          {eventToEdit ? (
-            <>
-              <button onClick={handleEdit}>Save Changes</button>
-              <button onClick={() => handleDelete(eventToEdit)}>
-                Delete Event
+            {/* Show "Save Changes" and "Delete Event" only when editing an existing event */}
+            {eventToEdit ? (
+              <>
+                <button onClick={handleEdit}>Save Changes</button>
+                <button onClick={() => handleDelete(eventToEdit)}>
+                  Delete Event
+                </button>
+              </>
+            ) : (
+              <button
+                onClick={() => {
+                  handleCreateEvent();
+                  setIsModalOpen(false);
+                  setEventToEdit(null);
+                }}
+              >
+                Create Event
               </button>
-            </>
-          ) : (
+            )}
+
             <button
               onClick={() => {
-                if (
-                  !newStartDate ||
-                  !newEndDate ||
-                  newStartDate >= newEndDate
-                ) {
-                  alert("Please select valid start and end dates!");
-                  return;
-                }
-                // Make sure the start and end dates are set
-                handleSelect({ start: newStartDate, end: newEndDate }); // Pass the correct start and end dates
+                setEventToEdit(null);
                 setIsModalOpen(false);
               }}
-              
             >
-              Create Event
+              Cancel
             </button>
-          )}
-
-          <button onClick={() => {setEventToEdit(null);
-            setIsModalOpen(false);}
-          }>Cancel</button>
+          </div>
         </div>
-      </div>
       )}
     </div>
   );
