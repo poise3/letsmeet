@@ -7,6 +7,7 @@ import { supabase } from "../supabaseClient";
 import { UserAuth } from "../context/AuthContext";
 import DateTimePicker from "react-datetime-picker";
 import "../Calendar.css";
+import TodoList from "./ToDoList.jsx";
 
 moment.locale("en-GB");
 const localizer = momentLocalizer(moment);
@@ -24,6 +25,8 @@ function MonthCalendar() {
   const [newStartDate, setNewStartDate] = useState(new Date());
   const [newEndDate, setNewEndDate] = useState(new Date());
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [sharedUpcomingEvents, setSharedUpcomingEvents] = useState([]);
+
 
   const fetchEvents = async () => {
     if (!session?.user?.id) return;
@@ -44,6 +47,20 @@ function MonthCalendar() {
         end: new Date(event.end),
       }));
       setEventsData(parsedEvents);
+
+      const now = new Date();
+      const sevenDaysFromNow = new Date();
+      sevenDaysFromNow.setDate(now.getDate() + 7);
+
+      // Filter for events in next 7 days that have shared users
+      const sharedEvents = parsedEvents.filter(event =>
+        event.shared_with &&
+        event.shared_with.length > 0 &&
+        event.start >= now &&
+        event.start <= sevenDaysFromNow
+      );
+
+      setSharedUpcomingEvents(sharedEvents);
     }
   };
 
@@ -354,6 +371,27 @@ function MonthCalendar() {
           </div>
         </div>
       )}
+      <div className="sidebar">
+        <div className="todo-section">
+          <TodoList />
+        </div>
+        <div className="shared-upcoming-events">
+          <h3>Upcoming Shared Events (Next 7 Days)</h3>
+          {sharedUpcomingEvents.length === 0 ? (
+            <p>No upcoming shared events.</p>
+          ) : (
+            <ul>
+              {sharedUpcomingEvents.map((event) => (
+                <li key={event.id}>
+                  <strong>{event.title}</strong><br />
+                  <small>{event.start.toLocaleString()} → {event.end.toLocaleString()}</small><br />
+                  {event.desc && <em>{event.desc}</em>}
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+      </div>
     </div>
   );
 }

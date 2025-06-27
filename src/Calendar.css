@@ -53,3 +53,44 @@
   font-size: 1.22rem;  
   margin-bottom: 0.5rem;  /* space below header */
 }
+
+.shared-upcoming-events {
+  position: fixed;
+  top: 300px;
+  right: 300px;
+  width: 250px;
+  background: #fefefe;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  padding: 15px;
+  z-index: 999;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.shared-upcoming-events h3 {
+  margin-bottom: 10px;
+  font-size: 1.1rem;
+  color: #333;
+}
+
+.shared-upcoming-events ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.shared-upcoming-events li {
+  margin-bottom: 10px;
+  padding-bottom: 10px;
+  border-bottom: 1px dashed #ccc;
+}
+
+.sidebar {
+  flex: 1; /* 25% width */
+  display: flex;
+  flex-direction: column;
+  padding: 20px;
+  background: #f7f7f7;
+  border-left: 1px solid #ddd;
+  overflow-y: auto;
+  max-width: 350px;
+}
