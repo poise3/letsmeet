@@ -380,6 +380,7 @@ function MonthCalendar() {
           {sharedUpcomingEvents.length === 0 ? (
             <p>No upcoming shared events.</p>
           ) : (
+            <div className="listcontainer">
             <ul>
               {sharedUpcomingEvents.map((event) => (
                 <li key={event.id}>
@@ -389,6 +390,7 @@ function MonthCalendar() {
                 </li>
               ))}
             </ul>
+            </div>
           )}
         </div>
       </div>

@@ -67,16 +67,18 @@ const TodoList = () => {
         />
         <button onClick={addTodo}>Add</button>
       </div>
-      <ul className="todo-list">
-        {todos.map((todo) => (
-          <li key={todo.id} className={todo.is_complete ? "completed" : ""}>
-            <span onClick={() => toggleComplete(todo.id, todo.is_complete)}>
-              {todo.task}
-            </span>
-            <button onClick={() => deleteTodo(todo.id)}>❌</button>
-          </li>
-        ))}
-      </ul>
+      <div className="todo-list-container">
+        <ul className="todo-list">
+          {todos.map((todo) => (
+            <li key={todo.id} className={todo.is_complete ? "completed" : ""}>
+              <span onClick={() => toggleComplete(todo.id, todo.is_complete)}>
+                {todo.task}
+              </span>
+              <button onClick={() => deleteTodo(todo.id)}>❌</button>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };
