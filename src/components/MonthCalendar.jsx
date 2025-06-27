@@ -19,6 +19,7 @@ function MonthCalendar() {
 
   const [eventToEdit, setEventToEdit] = useState(null);
   const [sharedWithInput, setSharedWithInput] = useState("");
+  const [descInput, setDescInput] = useState("");
   const [eventTitle, setEventTitle] = useState("");
   const [newStartDate, setNewStartDate] = useState(new Date());
   const [newEndDate, setNewEndDate] = useState(new Date());
@@ -101,6 +102,7 @@ function MonthCalendar() {
       .from("calendar")
       .update({
         title: eventTitle,
+        desc: descInput,
         start: newStartDate,
         end: newEndDate,
         shared_with: sharedWithUserIds,
@@ -144,6 +146,7 @@ function MonthCalendar() {
     const { data, error } = await supabase.from("calendar").insert([
       {
         title: eventTitle,
+        desc: descInput,
         start: newStartDate,
         end: newEndDate,
         user_id: session.user.id,
@@ -173,6 +176,7 @@ function MonthCalendar() {
   const openModal = async (event) => {
     setEventToEdit(event);
     setEventTitle(event.title);
+    setDescInput(event.desc);
     setNewStartDate(event.start);
     setNewEndDate(event.end);
     if (event.shared_with) {
@@ -222,6 +226,7 @@ function MonthCalendar() {
   const openModalForCreate = () => {
     setEventTitle("");
     setSharedWithInput("");
+    setDescInput("");
     setNewStartDate(new Date()); // Reset to current date for new event
     setNewEndDate(new Date()); // Reset to current date for new event
     setIsModalOpen(true); // Open the modal for event creation
@@ -285,6 +290,15 @@ function MonthCalendar() {
               onChange={(e) => setSharedWithInput(e.target.value)}
               placeholder="user1@example.com, user2@example.com"
               className="w-full p-2 border rounded"
+            />
+            <label>Notes/Description:</label>
+            <textarea
+              type="text"
+              value={descInput}
+              onChange={(e) => setDescInput(e.target.value)}
+              placeholder="Meetup details, google doc link etc."
+              className="w-full p-2 border rounded"
+              rows={4}
             />
             <label>Start Date & Time:</label>
             <DateTimePicker

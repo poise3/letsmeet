@@ -39,6 +39,17 @@
   padding: 20px;
   border-radius: 8px;
   min-width: 300px;
-  max-width: 90%;
+  max-width: 550px;
   box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+
+.modal-content label {
+  font-weight: 600;
+  margin-bottom: 0.22em;
+}
+
+.modal-content h3 {
+  font-weight: 700;
+  font-size: 1.22rem;  
+  margin-bottom: 0.5rem;  /* space below header */
 }
