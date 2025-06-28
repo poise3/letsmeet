@@ -27,7 +27,6 @@ function MonthCalendar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sharedUpcomingEvents, setSharedUpcomingEvents] = useState([]);
 
-
   const fetchEvents = async () => {
     if (!session?.user?.id) return;
 
@@ -53,11 +52,12 @@ function MonthCalendar() {
       sevenDaysFromNow.setDate(now.getDate() + 7);
 
       // Filter for events in next 7 days that have shared users
-      const sharedEvents = parsedEvents.filter(event =>
-        event.shared_with &&
-        event.shared_with.length > 0 &&
-        event.start >= now &&
-        event.start <= sevenDaysFromNow
+      const sharedEvents = parsedEvents.filter(
+        (event) =>
+          event.shared_with &&
+          event.shared_with.length > 0 &&
+          event.start >= now &&
+          event.start <= sevenDaysFromNow
       );
 
       setSharedUpcomingEvents(sharedEvents);
@@ -267,6 +267,7 @@ function MonthCalendar() {
         onSelectSlot={handleSelect}
         onView={handleViewChange}
         onNavigate={handleDateChange}
+        eventPropGetter={eventStyleGetter}
       />
 
       {/* Button to create new event */}
@@ -381,21 +382,41 @@ function MonthCalendar() {
             <p>No upcoming shared events.</p>
           ) : (
             <div className="listcontainer">
-            <ul>
-              {sharedUpcomingEvents.map((event) => (
-                <li key={event.id}>
-                  <strong>{event.title}</strong><br />
-                  <small>{event.start.toLocaleString()} → {event.end.toLocaleString()}</small><br />
-                  {event.desc && <em>{event.desc}</em>}
-                </li>
-              ))}
-            </ul>
+              <ul>
+                {sharedUpcomingEvents.map((event) => (
+                  <li key={event.id}>
+                    <strong>{event.title}</strong>
+                    <br />
+                    <small>
+                      {event.start.toLocaleString()} →{" "}
+                      {event.end.toLocaleString()}
+                    </small>
+                    <br />
+                    {event.desc && <em>{event.desc}</em>}
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
         </div>
       </div>
     </div>
   );
+}
+
+// styling for the events on the calendar
+function eventStyleGetter(event) {
+  const isGroup = event.shared_with && event.shared_with.length > 0;
+  // different color for shared events
+  const backgroundColor = isGroup ? "#16a34a" : "#417BFB";
+  return {
+    style: {
+      backgroundColor,
+      borderRadius: "8px",
+      color: "white",
+      padding: "2px 8px",
+    },
+  };
 }
 
 export default MonthCalendar;
