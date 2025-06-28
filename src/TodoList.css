@@ -1,32 +1,22 @@
 :root {
-  /* Light mode colors (default) */
   --bg-color: #fefefe;
   --text-color: #333;
   --border-color: #ccc;
   --shadow-color: rgba(0, 0, 0, 0.1);
   --dimmed-text: #999;
   --widget-bg: #f7f7f7;
-  --modal-bg: white;
-  --scrollbar-track: #f1f1f1;
-  --scrollbar-thumb: #888;
-  --scrollbar-hover: #555;
   --input-bg: white;
   --input-border: #ddd;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Dark mode colors */
     --bg-color: #2d2d2d;
     --text-color: #e0e0e0;
     --border-color: #444;
     --shadow-color: rgba(0, 0, 0, 0.3);
-    --dimmed-text: #aaa;
     --widget-bg: #1f1f1f;
     --modal-bg: #252525;
-    --scrollbar-track: #333;
-    --scrollbar-thumb: #666;
-    --scrollbar-hover: #888;
     --input-bg: #333;
     --input-border: #555;
   }
@@ -50,13 +40,6 @@
   max-height: 300px;
   display: flex;
   flex-direction: column;
-}
-
-.todo-widget-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-height: 0; /* Crucial for proper scrolling */
 }
 
 
@@ -105,8 +88,6 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: column;
   gap: 8px;
 }
 
@@ -116,8 +97,6 @@
   align-items: center;
   padding: 6px 8px;
   border-radius: 4px;
-  transition: background-color 0.2s;
-  margin-right: 6px; /* Space for scrollbar */
 }
 
 .todo-list li:hover {

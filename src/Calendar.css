@@ -1,31 +1,21 @@
 :root {
-  /* Light mode colors (default) */
   --bg-color: #fefefe;
   --text-color: #333;
   --border-color: #ccc;
   --shadow-color: rgba(0, 0, 0, 0.1);
-  --dimmed-text: #999;
   --modal-bg: white;
-  --scrollbar-track: #f1f1f1;
-  --scrollbar-thumb: #888;
-  --scrollbar-hover: #555;
   --input-bg: white;
   --input-border: #ddd;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    /* Dark mode colors */
     --bg-color: #2d2d2d;
     --text-color: #e0e0e0;
     --border-color: #444;
     --shadow-color: rgba(0, 0, 0, 0.3);
-    --dimmed-text: #aaa;
     --widget-bg: #1f1f1f;
     --modal-bg: #252525;
-    --scrollbar-track: #333;
-    --scrollbar-thumb: #666;
-    --scrollbar-hover: #888;
     --input-bg: #333;
     --input-border: #555;
   }
@@ -38,11 +28,11 @@
 .react-datetime-picker__inputGroup__year,
 .react-datetime-picker__inputGroup__hour,
 .react-datetime-picker__inputGroup__minute {
-  width: 60px !important; /* input width */
+  width: 60px !important;
 }
 
 .react-datetime-picker__inputGroup__divider {
-  margin: 0 5px !important; /* space between inputs */
+  margin: 0 5px !important;
 }
 
 .react-datetime-picker__inputGroup {
@@ -50,7 +40,7 @@
   align-items: center;
 }
 
-/* height of the input fields */
+
 .react-datetime-picker__inputGroup__input {
   background-color: var(--input-bg);
   border-color: var(--input-border);
@@ -63,7 +53,7 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background-color: rgba(0, 0, 0, 0.7); /* dim background */
+  background-color: rgba(0, 0, 0, 0.7); 
   display: flex;
   align-items: center;
   justify-content: center;
@@ -80,15 +70,11 @@
   max-width: 550px;
 }
 
-.modal-content label {
-  font-weight: 600;
-  margin-bottom: 0.22em;
-}
 
 .modal-content h3 {
   font-weight: 700;
   font-size: 1.22rem;  
-  margin-bottom: 0.5rem;  /* space below header */
+  margin-bottom: 0.5rem;
 }
 
 .shared-upcoming-events {

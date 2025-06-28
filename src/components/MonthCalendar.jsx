@@ -13,7 +13,7 @@ moment.locale("en-GB");
 const localizer = momentLocalizer(moment);
 
 function MonthCalendar() {
-  const { session } = UserAuth(); // get current user
+  const { session } = UserAuth(); 
   const [eventsData, setEventsData] = useState([]);
   const [currentView, setCurrentView] = useState("month");
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -51,10 +51,8 @@ function MonthCalendar() {
       const sevenDaysFromNow = new Date();
       sevenDaysFromNow.setDate(now.getDate() + 7);
 
-      // Filter for events in next 7 days that have shared users
       const sharedEvents = parsedEvents.filter(
         (event) =>
-          event.shared_with &&
           event.shared_with.length > 0 &&
           event.start >= now &&
           event.start <= sevenDaysFromNow
@@ -65,12 +63,12 @@ function MonthCalendar() {
   };
 
   const handleViewChange = (newView) => {
-    setCurrentView(newView); // Update the current view state
+    setCurrentView(newView); 
   };
 
   const handleDateChange = (newDate) => {
-    console.log("I am running + ${newDate}", currentDate);
-    setCurrentDate(newDate); // Update the current view state
+    
+    setCurrentDate(newDate); 
   };
 
   const handleDelete = async (event) => {
@@ -82,7 +80,6 @@ function MonthCalendar() {
       .from("calendar")
       .delete()
       .eq("id", event.id);
-    //.eq("user_id", session.user.id); *this line gives event owner permissions to delete only*
 
     if (error) {
       console.error("Error deleting event:", error);
@@ -96,7 +93,7 @@ function MonthCalendar() {
   const handleEdit = async () => {
     if (!eventToEdit) return;
 
-    // Process emails from input
+    
     const emails = sharedWithInput
       .split(",")
       .map((e) => e.trim())
@@ -114,7 +111,6 @@ function MonthCalendar() {
       return;
     }
 
-    // Update (not delete + insert) the event:
     const { error } = await supabase
       .from("calendar")
       .update({
@@ -125,7 +121,6 @@ function MonthCalendar() {
         shared_with: sharedWithUserIds,
       })
       .eq("id", eventToEdit.id);
-    //.eq("user_id", session.user.id); *this line gives event owner permissions to edit only*
 
     if (error) {
       alert("Error saving changes!");
@@ -141,7 +136,6 @@ function MonthCalendar() {
   const handleCreateEvent = async () => {
     if (!session?.user?.id) return;
 
-    // Process emails from input
     const emails = sharedWithInput
       .split(",")
       .map((e) => e.trim())
@@ -159,7 +153,7 @@ function MonthCalendar() {
       return;
     }
 
-    // insert the event:
+    
     const { data, error } = await supabase.from("calendar").insert([
       {
         title: eventTitle,
@@ -171,7 +165,6 @@ function MonthCalendar() {
       },
     ]);
 
-    console.log("Supabase Insert Response:", { data, error });
 
     if (error) {
       alert("Error saving changes!");
@@ -215,7 +208,7 @@ function MonthCalendar() {
 
   async function getUserIdsFromEmails(emails) {
     if (emails.length === 0) return [];
-    // Assuming you have a 'users' table with columns 'id' and 'email'
+    
     const { data, error } = await supabase
       .from("users")
       .select("id, email")
@@ -225,7 +218,7 @@ function MonthCalendar() {
       alert("Failed to look up users for sharing.");
       return [];
     }
-    console.log(data);
+    
     return data.map((user) => user.id);
   }
 
@@ -244,9 +237,9 @@ function MonthCalendar() {
     setEventTitle("");
     setSharedWithInput("");
     setDescInput("");
-    setNewStartDate(new Date()); // Reset to current date for new event
-    setNewEndDate(new Date()); // Reset to current date for new event
-    setIsModalOpen(true); // Open the modal for event creation
+    setNewStartDate(new Date()); 
+    setNewEndDate(new Date()); 
+    setIsModalOpen(true);
   };
 
   useEffect(() => {
@@ -270,21 +263,20 @@ function MonthCalendar() {
         eventPropGetter={eventStyleGetter}
       />
 
-      {/* Button to create new event */}
       <button
         className="create-event-btn"
         onClick={openModalForCreate}
         style={{
           position: "fixed",
-          bottom: "30px", // distance from the bottom of the window
-          right: "30px", // distance from the right of the window
+          bottom: "30px", 
+          right: "30px", 
           padding: "10px 20px",
           backgroundColor: "#007bff",
           color: "#fff",
           border: "none",
           borderRadius: "5px",
           cursor: "pointer",
-          zIndex: 1000, // Ensure it's above other elements on the page
+          zIndex: 1000, 
         }}
       >
         Create New Event
@@ -341,7 +333,6 @@ function MonthCalendar() {
             />
             <br />
 
-            {/* Show "Save Changes" and "Delete Event" only when editing an existing event */}
             {eventToEdit ? (
               <>
                 <button onClick={handleEdit}>Save Changes</button>
@@ -404,10 +395,8 @@ function MonthCalendar() {
   );
 }
 
-// styling for the events on the calendar
 function eventStyleGetter(event) {
   const isGroup = event.shared_with && event.shared_with.length > 0;
-  // different color for shared events
   const backgroundColor = isGroup ? "#16a34a" : "#417BFB";
   return {
     style: {
