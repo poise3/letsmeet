@@ -31,6 +31,31 @@
   width: 60px !important;
 }
 
+.create-event-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  padding: 10px 20px;
+  backgroundColor: #007bff;
+  color: #fff;
+  border: none;
+  borderRadius: 5px;
+  cursor: pointer;
+  zIndex: 1000;
+}
+
+.visual-panel-toggle {
+  position: fixed;
+  bottom: 80px;
+  right: 30px;
+  padding: 10px 20px;
+  backgroundColor: #007bff;
+  color: #fff;
+  border: none;
+  borderRadius: 5px;
+  cursor: pointer;
+  zIndex: 1000;
+}
 .react-datetime-picker__inputGroup__divider {
   margin: 0 5px !important;
 }
@@ -57,7 +82,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 1000;
+  z-index: 10000;
 }
 
 .modal-content {

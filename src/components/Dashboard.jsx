@@ -43,7 +43,7 @@ const Dashboard = () => {
               </p>
             </div>
           </div>
-
+          
           <h1 className="text-3xl font-bold mb-4 fancy-font pt-12 absolute right-8">
             LetsMeet
           </h1>

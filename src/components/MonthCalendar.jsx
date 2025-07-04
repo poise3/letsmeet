@@ -8,6 +8,8 @@ import { UserAuth } from "../context/AuthContext";
 import DateTimePicker from "react-datetime-picker";
 import "../Calendar.css";
 import TodoList from "./ToDoList.jsx";
+import VisualisationPanel from './VisualisationPanel';
+import "../VisualisationPanel.css";
 
 moment.locale("en-GB");
 const localizer = momentLocalizer(moment);
@@ -26,6 +28,8 @@ function MonthCalendar() {
   const [newEndDate, setNewEndDate] = useState(new Date());
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sharedUpcomingEvents, setSharedUpcomingEvents] = useState([]);
+  const [isPanelOnTop, setPanelOnTop] = useState(false);
+
 
   const fetchEvents = async () => {
     if (!session?.user?.id) return;
@@ -242,6 +246,10 @@ function MonthCalendar() {
     setIsModalOpen(true);
   };
 
+  const putPanelOnTop = () => {
+    setPanelOnTop(!isPanelOnTop);
+  };
+
   useEffect(() => {
     fetchEvents();
   }, [session]);
@@ -266,21 +274,21 @@ function MonthCalendar() {
       <button
         className="create-event-btn"
         onClick={openModalForCreate}
-        style={{
-          position: "fixed",
-          bottom: "30px", 
-          right: "30px", 
-          padding: "10px 20px",
-          backgroundColor: "#007bff",
-          color: "#fff",
-          border: "none",
-          borderRadius: "5px",
-          cursor: "pointer",
-          zIndex: 1000, 
-        }}
       >
         Create New Event
       </button>
+      <button
+        className="visual-panel-toggle"
+        onClick={putPanelOnTop}
+      >
+        Toggle Panel
+      </button>
+      <VisualisationPanel 
+        panelOnTop={isPanelOnTop}
+        events={eventsData} 
+        currentDate={currentDate} 
+        currentView={currentView} 
+      />
       {isModalOpen && (
         <div className="modal">
           <div className="modal-content">
