@@ -13,23 +13,21 @@ const Signin = () => {
 
   const handleSignIn = async (e) => {
     e.preventDefault();
-    const { session, error } = await signInUser(email, password); // Use your signIn function
+    const { session, error } = await signInUser(email, password);
 
     if (error) {
-      setError(error); // Set the error message if sign-in fails
+      setError(error);
 
-      // Set a timeout to clear the error message after a specific duration (e.g., 3 seconds)
       setTimeout(() => {
         setError("");
-      }, 3000); // 3000 milliseconds = 3 seconds
+      }, 3000);
     } else {
-      // Redirect or perform any necessary actions after successful sign-in
       navigate("/dashboard");
     }
 
     if (session) {
       closeModal();
-      setError(""); // Reset the error when there's a session
+      setError("");
     }
   };
 
@@ -41,7 +39,6 @@ const Signin = () => {
           Don't have an account yet? <Link to="/signup">Sign up</Link>
         </p>
         <div className="flex flex-col py-4 ">
-          {/* <label htmlFor="Email">Email</label> */}
           <input
             onChange={(e) => setEmail(e.target.value)}
             className="p-3 mt-2"
@@ -52,7 +49,6 @@ const Signin = () => {
           />
         </div>
         <div className="flex flex-col py-4">
-          {/* <label htmlFor="Password">Password</label> */}
           <input
             onChange={(e) => setPassword(e.target.value)}
             className="p-3 mt-2"

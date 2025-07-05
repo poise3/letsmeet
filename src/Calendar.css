@@ -106,7 +106,7 @@
   position: fixed;
   top: 500px;
   right:20px;
-  width: 250px;
+  width: 300px;
   max-height: 300px;
   background: var(--widget-bg);
   border: 1px solid var(--border-color);

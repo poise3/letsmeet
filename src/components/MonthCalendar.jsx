@@ -8,14 +8,14 @@ import { UserAuth } from "../context/AuthContext";
 import DateTimePicker from "react-datetime-picker";
 import "../Calendar.css";
 import TodoList from "./ToDoList.jsx";
-import VisualisationPanel from './VisualisationPanel';
+import VisualisationPanel from "./VisualisationPanel";
 import "../VisualisationPanel.css";
 
 moment.locale("en-GB");
 const localizer = momentLocalizer(moment);
 
 function MonthCalendar() {
-  const { session } = UserAuth(); 
+  const { session } = UserAuth();
   const [eventsData, setEventsData] = useState([]);
   const [currentView, setCurrentView] = useState("month");
   const [currentDate, setCurrentDate] = useState(new Date());
@@ -29,7 +29,6 @@ function MonthCalendar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sharedUpcomingEvents, setSharedUpcomingEvents] = useState([]);
   const [isPanelOnTop, setPanelOnTop] = useState(false);
-
 
   const fetchEvents = async () => {
     if (!session?.user?.id) return;
@@ -67,12 +66,11 @@ function MonthCalendar() {
   };
 
   const handleViewChange = (newView) => {
-    setCurrentView(newView); 
+    setCurrentView(newView);
   };
 
   const handleDateChange = (newDate) => {
-    
-    setCurrentDate(newDate); 
+    setCurrentDate(newDate);
   };
 
   const handleDelete = async (event) => {
@@ -97,7 +95,6 @@ function MonthCalendar() {
   const handleEdit = async () => {
     if (!eventToEdit) return;
 
-    
     const emails = sharedWithInput
       .split(",")
       .map((e) => e.trim())
@@ -157,7 +154,6 @@ function MonthCalendar() {
       return;
     }
 
-    
     const { data, error } = await supabase.from("calendar").insert([
       {
         title: eventTitle,
@@ -168,7 +164,6 @@ function MonthCalendar() {
         shared_with: sharedWithUserIds,
       },
     ]);
-
 
     if (error) {
       alert("Error saving changes!");
@@ -212,7 +207,7 @@ function MonthCalendar() {
 
   async function getUserIdsFromEmails(emails) {
     if (emails.length === 0) return [];
-    
+
     const { data, error } = await supabase
       .from("users")
       .select("id, email")
@@ -222,7 +217,7 @@ function MonthCalendar() {
       alert("Failed to look up users for sharing.");
       return [];
     }
-    
+
     return data.map((user) => user.id);
   }
 
@@ -241,8 +236,8 @@ function MonthCalendar() {
     setEventTitle("");
     setSharedWithInput("");
     setDescInput("");
-    setNewStartDate(new Date()); 
-    setNewEndDate(new Date()); 
+    setNewStartDate(new Date());
+    setNewEndDate(new Date());
     setIsModalOpen(true);
   };
 
@@ -268,26 +263,20 @@ function MonthCalendar() {
         onSelectSlot={handleSelect}
         onView={handleViewChange}
         onNavigate={handleDateChange}
-        eventPropGetter={eventStyleGetter}
+        eventPropGetter={eventStyle}
       />
 
-      <button
-        className="create-event-btn"
-        onClick={openModalForCreate}
-      >
+      <button className="create-event-btn" onClick={openModalForCreate}>
         Create New Event
       </button>
-      <button
-        className="visual-panel-toggle"
-        onClick={putPanelOnTop}
-      >
+      <button className="visual-panel-toggle" onClick={putPanelOnTop}>
         Toggle Panel
       </button>
-      <VisualisationPanel 
+      <VisualisationPanel
         panelOnTop={isPanelOnTop}
-        events={eventsData} 
-        currentDate={currentDate} 
-        currentView={currentView} 
+        events={eventsData}
+        currentDate={currentDate}
+        currentView={currentView}
       />
       {isModalOpen && (
         <div className="modal">
@@ -376,7 +365,8 @@ function MonthCalendar() {
           <TodoList />
         </div>
         <div className="shared-upcoming-events">
-          <h3>Upcoming Shared Events (Next 7 Days)</h3>
+          <h3>Upcoming Shared Events </h3>
+          <h4>(Next 7 Days)</h4>
           {sharedUpcomingEvents.length === 0 ? (
             <p>No upcoming shared events.</p>
           ) : (
@@ -403,7 +393,7 @@ function MonthCalendar() {
   );
 }
 
-function eventStyleGetter(event) {
+function eventStyle(event) {
   const isGroup = event.shared_with && event.shared_with.length > 0;
   const backgroundColor = isGroup ? "#16a34a" : "#417BFB";
   return {
