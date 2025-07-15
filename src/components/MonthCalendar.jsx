@@ -8,6 +8,7 @@ import { UserAuth } from "../context/AuthContext";
 import DateTimePicker from "react-datetime-picker";
 import "../Calendar.css";
 import TodoList from "./ToDoList.jsx";
+import MFA from "./MFA.jsx";
 import VisualisationPanel from "./VisualisationPanel";
 import "../VisualisationPanel.css";
 
@@ -41,7 +42,7 @@ function MonthCalendar() {
       .or(`user_id.eq.${userId},shared_with.cs.{"${userId}"}`);
 
     if (error) {
-      console.error("Error loading events:", error);
+      console.error("error fetching:", error);
     } else {
       const parsedEvents = data.map((event) => ({
         ...event,
@@ -84,7 +85,7 @@ function MonthCalendar() {
       .eq("id", event.id);
 
     if (error) {
-      console.error("Error deleting event:", error);
+      console.error("error deleting:", error);
     } else {
       fetchEvents();
       setEventToEdit(null);
@@ -100,7 +101,7 @@ function MonthCalendar() {
       .map((e) => e.trim())
       .filter(Boolean);
 
-    const sharedWithUserIds = await getUserIdsFromEmails(emails);
+    const sharedIDs = await getUserIdsFromEmails(emails);
 
     if (!eventTitle) {
       alert("Please enter event title!");
@@ -119,13 +120,13 @@ function MonthCalendar() {
         desc: descInput,
         start: newStartDate,
         end: newEndDate,
-        shared_with: sharedWithUserIds,
+        shared_with: sharedIDs,
       })
       .eq("id", eventToEdit.id);
 
     if (error) {
       alert("Error saving changes!");
-      console.error("Error editing event:", error);
+      console.error("error editing:", error);
       return;
     }
     fetchEvents();
@@ -142,7 +143,7 @@ function MonthCalendar() {
       .map((e) => e.trim())
       .filter(Boolean);
 
-    const sharedWithUserIds = await getUserIdsFromEmails(emails);
+    const sharedIDs = await getUserIdsFromEmails(emails);
 
     if (!eventTitle) {
       alert("Please enter event title!");
@@ -161,13 +162,13 @@ function MonthCalendar() {
         start: newStartDate,
         end: newEndDate,
         user_id: session.user.id,
-        shared_with: sharedWithUserIds,
+        shared_with: sharedIDs,
       },
     ]);
 
     if (error) {
-      alert("Error saving changes!");
-      console.error("Error creating event:", error);
+      alert("Error creating event");
+      console.error("error creating: ", error);
       return;
     }
     fetchEvents();
@@ -189,8 +190,8 @@ function MonthCalendar() {
     setNewStartDate(event.start);
     setNewEndDate(event.end);
     if (event.shared_with) {
-      const emailsString = await getEmailsFromUserIds(event.shared_with);
-      setSharedWithInput(emailsString);
+      const emails = await getEmailsFromUserIds(event.shared_with);
+      setSharedWithInput(emails);
     } else {
       setSharedWithInput("");
     }
@@ -214,9 +215,10 @@ function MonthCalendar() {
       .in("email", emails);
 
     if (error) {
-      alert("Failed to look up users for sharing.");
+      alert("failed lookup");
       return [];
     }
+    console.log("fetched: ", emails, data);
 
     return data.map((user) => user.id);
   }
@@ -229,6 +231,8 @@ function MonthCalendar() {
       .in("id", userIds);
 
     if (error) return "";
+    console.log("fetched: ", userIds, data);
+
     return data.map((user) => user.email).join(", ");
   }
 
@@ -265,7 +269,7 @@ function MonthCalendar() {
         onNavigate={handleDateChange}
         eventPropGetter={eventStyle}
       />
-
+      <MFA />
       <button className="create-event-btn" onClick={openModalForCreate}>
         Create New Event
       </button>

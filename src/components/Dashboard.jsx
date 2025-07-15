@@ -14,7 +14,7 @@ const Dashboard = () => {
       await signOut();
       navigate("/signin");
     } catch (err) {
-      setError("An unexpected error occurred."); // Catch unexpected errors
+      setError("An unexpected error occurred.");
     }
   };
   console.log(session);
@@ -28,13 +28,13 @@ const Dashboard = () => {
         </div>
 
         <div className="flex">
-          <div>
+          <div className="mr-20">
             <h2 className="pt-12 font-bold text-lg">
               Welcome,{" "}
               {session?.user?.user_metadata.display_name ||
                 session?.user?.email}
             </h2>
-            <div className="ml-8">
+            <div className="ml-5">
               <p
                 onClick={handleSignOut}
                 className="inline-block cursor-pointer bg-[#417BFB] text-white font-semibold rounded px-3 py-2 mt-4 shadow text-center"
@@ -43,10 +43,8 @@ const Dashboard = () => {
               </p>
             </div>
           </div>
-          
-          <h1 className="text-3xl font-bold mb-4 fancy-font pt-12 absolute right-8">
-            LetsMeet
-          </h1>
+
+          <h1 className="text-3xl font-bold mb-4 fancy-font pt-12">LetsMeet</h1>
         </div>
       </div>
     </div>

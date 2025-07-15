@@ -31,17 +31,18 @@
   width: 60px !important;
 }
 
+.mfa-btn {
+  position: fixed;
+  bottom: 130px;
+  right: 30px;
+  padding: 10px 20px;
+}
+
 .create-event-btn {
   position: fixed;
   bottom: 30px;
   right: 30px;
   padding: 10px 20px;
-  backgroundColor: #007bff;
-  color: #fff;
-  border: none;
-  borderRadius: 5px;
-  cursor: pointer;
-  zIndex: 1000;
 }
 
 .visual-panel-toggle {
@@ -49,12 +50,6 @@
   bottom: 80px;
   right: 30px;
   padding: 10px 20px;
-  backgroundColor: #007bff;
-  color: #fff;
-  border: none;
-  borderRadius: 5px;
-  cursor: pointer;
-  zIndex: 1000;
 }
 .react-datetime-picker__inputGroup__divider {
   margin: 0 5px !important;
@@ -143,3 +138,4 @@
   background: var(--widget-bg);
   max-height: 200px;
 }
+
