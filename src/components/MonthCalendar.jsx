@@ -11,6 +11,8 @@ import TodoList from "./ToDoList.jsx";
 import MFA from "./MFA.jsx";
 import VisualisationPanel from "./VisualisationPanel";
 import "../VisualisationPanel.css";
+import AvailabilityWidget from "./AvailabilityWidget.jsx";
+import "../AvailabilityWidget.css"
 
 moment.locale("en-GB");
 const localizer = momentLocalizer(moment);
@@ -30,6 +32,7 @@ function MonthCalendar() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [sharedUpcomingEvents, setSharedUpcomingEvents] = useState([]);
   const [isPanelOnTop, setPanelOnTop] = useState(false);
+  const [showAvailabilityWidget, setShowAvailabilityWidget] = useState(false);
 
   const fetchEvents = async () => {
     if (!session?.user?.id) return;
@@ -249,6 +252,7 @@ function MonthCalendar() {
     setPanelOnTop(!isPanelOnTop);
   };
 
+
   useEffect(() => {
     fetchEvents();
   }, [session]);
@@ -282,6 +286,15 @@ function MonthCalendar() {
         currentDate={currentDate}
         currentView={currentView}
       />
+      <button className="availability-widget-btn" onClick={() => setShowAvailabilityWidget(true)}>
+        Find Common Availability
+      </button>
+      {showAvailabilityWidget && (
+        <AvailabilityWidget
+          onClose={() => setShowAvailabilityWidget(false)}
+          currentUserEvents={eventsData}
+        />
+      )}
       {isModalOpen && (
         <div className="modal">
           <div className="modal-content">

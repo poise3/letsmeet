@@ -51,6 +51,14 @@
   right: 30px;
   padding: 10px 20px;
 }
+
+.availability-widget-btn {
+  position: fixed;
+  bottom: 180px;
+  right: 30px;
+  padding: 10px 20px;
+}
+
 .react-datetime-picker__inputGroup__divider {
   margin: 0 5px !important;
 }
