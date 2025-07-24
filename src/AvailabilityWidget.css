@@ -52,7 +52,7 @@
 
 .availability-widget .results {
   margin-top: 1.5rem;
-  max-height: 300px;
+  max-height: 150px;
   overflow-y: auto;
   border-top: 1px solid var(--border-color);
   padding-top: 1rem;
