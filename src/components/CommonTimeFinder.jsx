@@ -21,7 +21,7 @@ const CommonTimeFinder = ( { events, duration, freeHours, period } ) => {
             const slotStart = new Date(Math.max(dayStart, start));
             const slotEnd = new Date(Math.min(dayEnd, end));
             
-            const slotDuration = (slotEnd - slotStart) / (1000 * 60); // minutes
+            const slotDuration = (slotEnd - slotStart) / (1000 * 60); 
             if (slotDuration >= duration) {
                 slots.push({
                     start: new Date(slotStart),
@@ -75,7 +75,7 @@ const CommonTimeFinder = ( { events, duration, freeHours, period } ) => {
     }
     lastEnd = new Date(mergedEvents[0].end);
 
-    // Check gaps between events
+    
     for (let i = 1; i < mergedEvents.length; i++) {
         if (mergedEvents[i].start > lastEnd) {
             gaps.push(...getAvailableSlots(

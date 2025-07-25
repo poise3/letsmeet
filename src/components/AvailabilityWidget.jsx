@@ -45,7 +45,6 @@ const AvailabilityWidget = ({ onClose, currentUserEvents }) => {
       console.log('Found user IDs:', userIds);
 
       if (userIds.length === 0) {
-        console.log('No user IDs found for these emails'); // Debug 3
         setOtherUsersEvents([]);
         setAvailableSlots([]);
         return;
@@ -57,23 +56,19 @@ const AvailabilityWidget = ({ onClose, currentUserEvents }) => {
         .in('user_id', userIds);
 
       if (!error) {
-        console.log('Raw events from database:', data); // Debug 4
         const processedEvents = data.map(event => ({
           ...event,
           start: new Date(event.start),
           end: new Date(event.end)
         }));
-        console.log('Processed events:', processedEvents); // Debug 5
         setOtherUsersEvents(processedEvents);
         const allEvents = [...currentUserEvents, ...processedEvents];
-        console.log('All events being analyzed:', allEvents); // Debug 6
         const slots = CommonTimeFinder({
             events: allEvents,
             duration,
             freeHours,
             period
         });
-        console.log('Calculated available slots:', slots); // Debug 7
       setAvailableSlots(slots);
         
 
